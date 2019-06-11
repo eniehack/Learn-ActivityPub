@@ -1,0 +1,49 @@
+= Overview
+
+== ActivityPubとは
+
+* W3Cの策定した分散SNSの標準規格
+* pump.ioのActivityPumpをベースに設計
+* 2つのプロトコルを定義している
+** Server to Server Protocol(Federation Protocol)
+** client to Server Protocol
+* JSON-LD footnote:[https://www.w3.org/TR/json-ld/]を用いて通信する
+
+== 概要
+
+* ユーザーはサーバー上のアカウントを通して `actor` と表現する
+* 全てのactorは `inbox` 、 `outbox` を持つ
+* `inbox` 、 `outbox` は実際にはエンドポイントである
+* `inbox` はメッセージを受け取る
+* `outbox` は他のアカウントにメッセージを送信する
+* `ActivityStream` footnote:[https://www.w3.org/TR/activitystreams-core/] の語彙を使う footnote:[https://www.w3.org/TR/activitystreams-vocabulary/]
+
+```json
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "type": "Person",
+    "id": "https://social.example/alyssa/",
+    "name": "Alyssa P. Hacker",
+    "preferredUsername": "alyssa",
+    "summary": "Lisp enthusiast hailing from MIT",
+    "inbox": "https://social.example/alyssa/inbox/",
+    "outbox": "https://social.example/alyssa/outbox/",
+    "followers": "https://social.example/alyssa/followers/",
+    "following": "https://social.example/alyssa/following/",
+    "liked": "https://social.example/alyssa/liked/"
+}
+```
+
+* 
+
+== 使用例
+
+* Mastodon
+* Misskey
+* Pleroma
+* PeerTube
+
+== 参考サイト
+
+* https://www.w3.org/TR/activitypub/[ActivityPub]
+* https://ja.wikipedia.org/wiki/ActivityPub[ActivityPub - Wikipedia]
