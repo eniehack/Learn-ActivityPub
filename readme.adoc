@@ -1,0 +1,13 @@
+= Learn ActivityPub
+
+== Overview
+
+* このリポジトリはActivityPubに関するドキュメントを日本語で整理するためのリポジトリです。
+* 私はActivityPubのことを理解していません。また、英語、日本語が下手です。そのため問題点等見つけられましたら https://github.com/eniehack/learn-activitypub/pulls[Pull Request]や、 https://github.com/eniehack/learn-activitypub/issues[issue]にご協力ください。
+* 最終的にはPythonなどを用いてctivityPubに準拠したサーバを実装する簡易的に実装するかもしれません。
+
+== Loadmap
+
+. https://www.w3.org/TR/activitypub/[W3Cの勧告書]を日本語で要約 (WIP)
+. W3Cの勧告書以外の有益なドキュメントを翻訳
+. PythonやGolangなど一般的で比較的簡単な言語を用いてActivityPubに準拠したサーバを実装する(?)
