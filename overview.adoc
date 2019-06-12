@@ -1,24 +1,46 @@
 = Overview
+Nakaya <eniehack@outlook.jp>
+:xrefstyle: short
+:toc:
 
 == ActivityPubとは
 
+<<activitypub-wikipedia>> より
+
 * W3Cの策定した分散SNSの標準規格
 * pump.ioのActivityPumpをベースに設計
+
+<<activitypub>> より
+
 * 2つのプロトコルを定義している
 ** Server to Server Protocol(Federation Protocol)
 ** client to Server Protocol
 * JSON-LD footnote:[https://www.w3.org/TR/json-ld/]を用いて通信する
 
+== 使用例
+
+* Mastodon
+* Misskey
+* Pleroma
+* PeerTube
+
 == 概要
 
-* ユーザーはサーバー上のアカウントを通して `actor` と表現する
-* 全てのactorは `inbox` 、 `outbox` を持つ
-* `inbox` 、 `outbox` は実際にはエンドポイントである
-* `inbox` はメッセージを受け取る
-* `outbox` は他のアカウントにメッセージを送信する
-* `ActivityStream` footnote:[https://www.w3.org/TR/activitystreams-core/] の語彙を使う footnote:[https://www.w3.org/TR/activitystreams-vocabulary/]
+<<activitypub>>のOverviewより
 
-```json
+=== 用語
+
+* ここではserver-to-serverを *s2s* と、client-to-serverを *c2s* と略すことにします
+* ユーザーはサーバー上のアカウントを通して *actor* と表現する
+* 全てのactorは *inbox* 、 *outbox* を持つ
+* *inbox* 、 *outbox* は実際にはエンドポイントである
+* *inbox* はメッセージを受け取る
+* *outbox* は他のアカウントにメッセージを送信する
+
+下はユーザーデータの例
+
+[source,json]
+----
 {
     "@context": "https://www.w3.org/ns/activitystreams",
     "type": "Person",
@@ -32,18 +54,136 @@
     "following": "https://social.example/alyssa/following/",
     "liked": "https://social.example/alyssa/liked/"
 }
-```
+----
 
-* 
+* *ActivityStream* footnote:[https://www.w3.org/TR/activitystreams-core/] の語彙 footnote:[activity-vocaburaly? https://www.w3.org/TR/activitystreams-vocabulary/] を使う
+* ActivityStreamはJSON-LDを用いて拡張が可能
+* OStatusとは異なりActivityPubではシンプルにRESTベースでサーバ間通信している
 
-== 使用例
+=== 通信
 
-* Mastodon
-* Misskey
-* Pleroma
-* PeerTube
+.通信の概要を解説する画像
+[[fig-1]]
+[caption="図1: ", link=https://www.w3.org/TR/activitypub/]
+image::https://www.w3.org/TR/activitypub/illustration/tutorial-2.png[通信の概要]
+
+なお、<<fig-1>>は<<activitypub>>より引用した。
+
+* actorとinbox、outbox、 他のアカウントとinbox、outboxではPOSTやGETなどRESTで通信する
+
+* 誰かのinboxにメッセージをPOSTする(s2s)
+* 自分のinboxにGETすることで最新のメッセージを読む(c2s)
+** タイムラインを参照するようなもの？
+* 自分のoutboxにメッセージをPOSTする(c2s)
+* 誰かのoutboxをGETすることで投稿したメッセージを読む(c2s and/or s2s)
+** この方法は効率が悪いので、実際ではactorからのメッセージを所属サーバーが誰かのinboxに送信する
+
+==== 例
+
+===== プライベートメッセージ
+
+メッセージをAliceとBobでやりとりする
+
+.. AliceはBobに宛てた<<samplejson-1>>のようなJSONをAlice自身のoutboxにPOSTする
+.. アクティビティ以外のオブジェクトのため、サーバは新規のアクティビティと認識したら、それを<<samplejson-2>>のようにCreateアクティビティに整形する
+.. aliceのサーバはBobのactorオブジェクトを探し、彼のinboxを見つけると<<samplejson-2>>をそこへPOSTする
+.. 同じようにBobが返信する<<samplejson-3>>
+.. Aliceが自身のinboxを確認しBobからの返信をGETから確認する
+.. AliceがBobからの返信にいいねする
+** AliceからBobへ<<samplejson-4>>のようなJSONを送信する
+** いいねはアクティビティであるためCreateオブジェクトに整形する必要がない)
+
+.samplejson-1
+[[samplejson-1]]
+[source,json]
+----
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "type": "Note",
+    "to": ["https://example.com/bob/"],
+    "attributedTo": "https://social.example/alice/",
+    "content": "Hello, World!"
+}
+----
+.samplejson-2
+[[samplejson-2]]
+[source,json]
+----
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "type": "Create",
+    "id": "https://social.example/alice/posts/a29a6843-9feb-4c74-a7f7-081b9c9201d3",
+    "to": ["https://example.com/bob/"],
+    "actor": "https://social.example/alice/",
+    "object": {
+        "type": "Note",
+        "id": "https://social.example/alice/posts/49e2d03d-b53a-4c4c-a95c-94a6abf45a19",
+        "attributedTo": "https://social.example/alice/",
+        "to": ["https://example.com/bob/"],
+        "content": "Hello. My name is Alice."
+    }
+}
+----
+.samplejson-3
+[[samplejson-3]]
+[source,json]
+----
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "type": "Create",
+    "id": "https://chatty.example/ben/p/51086",
+    "to": ["https://social.example/alice/"],
+    "actor": "https://example.com/bob/",
+    "object": {
+        "type": "Note",
+        "id": "https://example.com/ben/p/51085",
+        "attributedTo": "https://example.com/bob/",
+        "to": ["https://social.example/alice/"],
+        "inReplyTo": "https://social.example/alice/posts/49e2d03d-b53a-4c4c-a95c-94a6abf45a19",
+        "content": "<p>Hello. My name is Bob.</p>"
+    }
+}
+----
+.samplejson-4
+[[samplejson-4]]
+[source,json]
+----
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "type": "Like",
+    "id": "https://social.example/alyssa/posts/5312e10e-5110-42e5-a09b-934882b3ecec",
+    "to": ["https://chatty.example/ben/"],
+    "actor": "https://social.example/alyssa/",
+    "object": "https://chatty.example/ben/p/51086"
+}
+----
+
+===== 公開投稿
+
+Aliceがフォロワーに向けて投稿するとき、<<samplejson-5>>のようなJSONをサーバに送信する
+
+.samplejson-5
+[source,json]
+----
+{
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "type": "Create",
+    "id": "https://social.example/alice/posts/9282e9cc-14d0-42b3-a758-d6aeca6c876b",
+    "to": ["https://social.example/alice/followers/",
+            "https://www.w3.org/ns/activitystreams#Public"],
+    "actor": "https://social.example/alice/",
+    "object": {
+        "type": "Note",
+        "id": "https://social.example/alice/posts/d18c55d4-8a63-4181-9745-4e6cf7938fa1",
+        "attributedTo": "https://social.example/alice/",
+        "to": ["https://social.example/alice/followers/",
+        "https://www.w3.org/ns/activitystreams#Public"],
+        "content": "Hello, World!"}}
+----
 
 == 参考サイト
 
-* https://www.w3.org/TR/activitypub/[ActivityPub]
-* https://ja.wikipedia.org/wiki/ActivityPub[ActivityPub - Wikipedia]
+[bibliography]
+
+* [[[activitypub]]]https://www.w3.org/TR/activitypub/
+* [[[activitypub-wikipedia]]]https://ja.wikipedia.org/wiki/ActivityPub
