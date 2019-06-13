@@ -1,0 +1,29 @@
+= Conformance
+:toc:
+
+* この規格書は<<RFC2119>>の *MAY*、*MUST*、*MUST NOT*、*SHOULD*、*SHOULD NOT* を用いる
+
+== Specification Profiles
+
+ActivityPubは密接に関係し合う2つのプロトコルを定義する
+
+* *Social API (c2s)*
+** ユーザに代わって動作するクライアントを許可する
+*** スマホアプリのクライアントとかで使える規格
+* *Federation Protocol (s2s)*
+** 違うサーバに存在するactor達の間にアクティビティを配信し同じ結び付き footnote:[原文ではsocial graphと表現している]の中へactor達を結ぶためのプロトコル
+
+* ActivityPubはどちらか1つのプロトコルを実装するともう1つを実装するのが簡単になるように設計された
+** しかしサーバは1つのみの実装だけでもよい
+* ActivityPubは3つの適合された階級を定義する
+
+* *ActivityPub conformant Client(ActivityPubに適合したクライアント)*
+** c2sプロトコルのクライアント部分に準拠したあらゆる実装に適用される
+* *ActivityPub conformant Server(ActivityPubに適合したサーバ)*
+** c2sプロトコルのサーバ部分に準拠したあらゆる実装に適用される
+* *ActivityPub conformant Federated Server(ActivityPubに適合した連合サーバ)*
+** Federation Protocolに準拠したあらゆる実装に適用される
+
+[bibliography]
+
+* [[[RTC2119]]]https://tools.ietf.org/html/rfc2119
