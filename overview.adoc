@@ -3,6 +3,8 @@ Nakaya <eniehack@outlook.jp>
 :xrefstyle: short
 :toc:
 
+This document includes material copied from or derived from https://www.w3.org/TR/activitypub/[ActivityPub]. Copyright &copy; 2018 W3C&reg; (MIT, ERCIM, Keio, Beihang).
+
 == ActivityPubとは
 
 <<activitypub-wikipedia>> より
