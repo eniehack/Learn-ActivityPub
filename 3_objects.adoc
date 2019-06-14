@@ -1,0 +1,40 @@
+= Objects
+
+* <<ActivityStreams>>とActivityPubではObjectsは中心となる概念
+* ObjectsはよくActivitiy達を内包する
+* objectsはCollectionsに含まれている
+** CollectionsはObjects自身のサブクラス
+* <<Activity-Vocabulary>>の特にlink:https://www.w3.org/TR/activitystreams-vocabulary/#types[Core Classes]にActivityPubは厳密に従っている
+* ActivityPubはActivityStreamsに加え、幾つかの用語を定義している
+** JSON-LDのlink:https://www.w3.org/ns/activitystreams[context]用にこれらの用語を提供している
+* 実装者はActivityPubのコンテキストにobjectの定義を含めるべきだ(SHOULD)
+* 実装者は追加で、適切なコンテキストを含んでよい(MAY)
+* ActivityPubはActivityStreamsと同じURL/IRI規則を持つ
+* サーバは受け取ったコンテンツがなりすまし攻撃でないよう避けるために妥当か検査をすべき(SHOULD)
+** サーバは少なくとも～署名の検査のような何かすべきである
+
+== 3.1 Object Identifers
+
+* ActivityStreamsである全てのobjectはグローバルで一意な識別子を持つべき
+* ActivityPubはこの要件を拡張した
+** ActivityPubプロトコルで配信された全てのobjectは意図的な一時的objectでない限り、グローバルで一意な識別子を持たなければならない(MUST)
+*** ここでの"意図的な一時的object"とはチャットメッセージや通知など短時間のactivityを指す
+* これらの識別子は必ず以下のグループに所属する
+.. のような公に参照できないURI
+.. 匿名objectを意味するJSON nullobjectとして明示されたID
+
+* 意図的な一時的objectでない限り、識別子はs2s通信で送信されるactivityで提供されなければならない(MUST)
+* c2s通信においてサーバはactorの名前空間と投稿されたobjectにobject IDを割り当てるべき(SHOULD)
+
+* 全てのobjectは以下の項目を持つ
+** *id*
+*** objectのグローバルで一意な識別子
+*** 一時的なobjectはidを省略してもよい(MAY)
+** *type*
+*** objectの種類
+
+== 参考文献
+
+[bibliography]
+* [[[Activity-Vocabulary]]]https://www.w3.org/TR/activitystreams-vocabulary/
+* [[[ActivityStreams]]]https://www.w3.org/TR/activitystreams-core/
