@@ -49,6 +49,17 @@
 ** またはプライベートと見なされるobjectへのアクセス禁止HTTPコード403を返す
 * 公開したくないプライベートと見なされるobjectの発信源であるサーバは代わりにHTTPステータスコード404で応答してもよい
 
+== 3.3 The source property
+
+* ActivityPubは<<Activity-Vocabulary>>のプロパティに加え、objectにsourceプロパティを拡張している
+* sourceプロパティは原稿の型として、またはクライアントによってそのメディアテープが編集がサポートされるようになったときのために、マークアップされたソースから伝えることを目的とする
+* 一般にクライアントはsourceからcontentへの変換を行うが、その逆は不可能である
+* sourceプロパティは独自にcontentとmediaTypeの各プロパティを持つ
+* sourceプロパティのcontentはcontentとは異なったマークアップで書かれた投稿が入る
+* sourceプロパティのmediaTypeはsourceプロパティのcontentがどのマークアップで書かれたのかを記述する
+** 例: `text/markdown`,`text/x-org`
+* クライアントがmediaTypeを処理できないときは元の投稿を元のメディアテープもまま編集できるようにするのがよい
+
 == 参考文献
 
 [bibliography]
