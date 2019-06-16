@@ -33,6 +33,22 @@
 ** *type*
 *** objectの種類
 
+== 3.2 Retrieving object
+
+* HTTPのGETメソッドはActivityを検索するさいにobjectのidに対して間接参照してよい
+* サーバはリクエストを返すデータの型を選択するためRFC7231で定義されたHTTPコンテンツネゴシエーションを使ってもよい(MAY)
+* サーバは `application/ld+json; profile="https://www.w3.org/ns/activityatreams"` のリクエストにActivityStreamsのobjectをレスポンスしなければならない(MUST)
+* サーバは `application/activity+json` に応答してActivityStreamsのobjectをレスポンスすべき(SHOULD)
+* クライアントはアクティビティを検索しやすいようにヘッダー `Accept` とメディアテープ `application/ld+json; profile="https://www.w3.org/ns/activityatreams"` を指定しなければならない(MUST)
+
+* サーバは上の条件に従わないリクエストには別のレスポンスをしてもよい(MAY)
+
+* サーバはlink:https://www.w3.org/TR/activitypub/#authorization[ここ]に指定された認可(Authorization)を必要としてよい(MAY)
+* サーバは独自の認可ルールを実装してよい
+* サーバは認証・認可を通らなかったリクエストを適切なHTTPエラーコードをレスポンスすると共にリクエストを失敗させるべきである。(SHOULD)
+** またはプライベートと見なされるobjectへのアクセス禁止HTTPコード403を返す
+* 公開したくないプライベートと見なされるobjectの発信源であるサーバは代わりにHTTPステータスコード404で応答してもよい
+
 == 参考文献
 
 [bibliography]
