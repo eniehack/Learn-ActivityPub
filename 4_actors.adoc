@@ -1,0 +1,94 @@
+= 4. Actors
+
+* ActivityPubのActorは一般的にlink:https://www.w3.org/TR/activitystreams-vocabulary/#actor-types[ActivityStreams Actor Types]のひとつ
+** 必ずしも必要ではない
+* ActivityPubでActorは他のどのObjectのように検索することができる
+* Actorは他のActivityStreamsのobjectのように内容がURIであるidを持つ
+* この目的のためIDの正規化は以下のように行うべき(SHOULD)
+.. もしURIであるIDが入力されたならそのIDは直接使えるようにする
+.. `example.org/alice/` のようなの場合クライアントは標準のスキームを用いるように試みてよい(MAY)
+... HTTPSが望ましい
+.. 上記以外であれば入力された値は無効であるべき
+
+* ActorのURIが検証されれば、間接参照されるべき
+
+NOTE: ActivityPubはユーザとActorの間特定の関係に言及しないため、たくさんの構成をすることが可能である。
+
+== 4.1 Actor objects
+
+* link:https://www.w3.org/TR/activitypub/#obj-id[ここ]のプロパティに加え、以下のプロパティをActor objectに必ず含めること(MUST) +
+** *inbox* (MUST) +
+Actorが受け取った全てのメッセージが含まれるlink:https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection[OrderedCollection]への参照
+** *outbox* (MUST) +
+Actorによって投稿された全てのメッセージが含まれるlink:https://www.w3.org/TR/activitystreams-vocabulary/#dfn-orderedcollection[OrderedCollection]への参照
+** *outbox* (MUST) +
+** *following* (SHOULD)footnote:[実装にこのプロパティを含めるべきの意] +
+ActorがフォローしているActorのActivityPub collectionへのリンク
+** *followers* (SHOULD)
+ActorをフォローしているActorのActivityPub collectionへのリンク
+** *liked* (MAY) footnote:[実装にこのプロパティを含めてよいの意] +
+Actorが「いいね」をしたobjectのActivityPub collectionへのリンク
+** *streams* (MAY) +
+興味があるかもしれないcollectionの追加リスト
+** *preferredUsername* (MAY) +
+Actorを参照するさいに用いるかもしれない短く一意であることが保証されないユーザーネーム
+** *endpoints* (MAY) +
+ActorまたはActorを参照しようとしている誰かのどちらかに役に立つかもしれないエンドポイントについて追加で描画されるjsonのobject
+
+以下はendpointsが含んでもよいプロパティ(MAY)
+
+*** *proxyURL* +
+Actorのクライアントが、アクセスするための認証が必要となるリモートのActivityStreamsのobjectsへアクセスできるようになるエンドポイントのURI
+
+*** *oauthAuthorizationEndpoint* +
+クライアントサーバ間通信での認可でOAuth 2.0 bearer tokensを用いるときこのエンドポイントはユーザがブラウザで認可された許可を入手できるかもしれないURIを指定する
+
+*** *oauthTokenEndpoint* +
+クライアントサーバ間通信での認可でOAuth 2.0 bearer tokensを用いるときこのエンドポイントはクライアントがアクセストークンを入手できるかもしれないURIを指定する
+
+*** *provideClientKey* +
+認証(Authorization)と認可(Authentication)でLinked Data SignaturesとHTTPSignaturesを用いるとき、このエンドポイントはブラウザで認可されたユーザがクライアントサーバ間通信のためのクライアント向け公開鍵を認可(authorize)するかもしれないURIを指定する
+
+*** *signClientKey* +
+認証(Authorization)と認可(Authentication)でLinked Data SignaturesとHTTPSignaturesを用いるとき、このエンドポイントはActorに代わって他のサーバと通信する時間枠(？)についてActorの鍵でクライアントキーが署名されるかもしれないURIを指定する
+
+*** *sharedInbox* +
+* 公に公開されているActivity、フォロワーに送信されたActivityが広範に運ばれるために用いられる任意のエンドポイントのこと
+* sharedInboxエンドポイントも特別であるPublic collectionへ宛てられたobjectを含むOrderedCollection objectが公然と読み出しができるべき(SHOULD)
+* sharedInboxエンドポイントからの読み出しはPublicへ宛てられていないobjectを必ず与えてはならない(MUST NOT)
+
+以下に上の要件を満たした例を示す
+
+[source,json]
+----
+{
+  "@context": ["https://www.w3.org/ns/activitystreams",
+               {"@language": "en"}],
+  "type": "Person",
+  "id": "https://example.com/alice/",
+  "following": "https://example.com/alice/following.json",
+  "followers": "https://example.com/alice/followers.json",
+  "liked": "https://example.com/alice/liked.json",
+  "inbox": "https://example.com/alice/inbox.json",
+  "outbox": "https://example.com/alice/feed.json",
+  "preferredUsername": "alice",
+  "name": "Alice",
+  "summary": "My name is Alice.",
+  "icon": [
+    "https://example.com/image/165987aklre4"
+  ]
+}
+----
+
+NOTE: いくつかのActivityStreamsのプロパティはActivityPub実装でどのように用いられるかを特に強調する必要がある
+
+** *url*
+idプロパティとはActorのプロフィールページのリンクが異なるさいに用いる +
+** *name* +
+Actorの表示名またはニックネーム
+** *summary* +
+手短なユーザ自身の自己紹介
+** *icon* +
+画像またはユーザプロファイル画像を示すImage objectへのリンク
+
+NOTE: `name` プロパティや、 `summary`、 `preferredUsername` 各プロパティなど自然言語を含むプロパティはlink:https://www.w3.org/TR/activitystreams-core/#naturalLanguageValues[このリンク]を参考にする
