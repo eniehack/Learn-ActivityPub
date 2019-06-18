@@ -19,6 +19,23 @@ NOTE: 要約中です
 * outboxはHTTPのPOSTリクエストを許可する
 ** 詳細は6章
 
+== 5.2 Inbox
+
+* inboxはActorのプロフィールのinboxプロパティから発見される
+* inboxは `OrderedCollection` でなければならない(MUST)
+* inboxの流れはActorが受け取る全てのActivityを含む
+* サーバは要求者の権限と一致するコンテンツをフィルタすべき
+* inboxの所有者が全てのコンテンツにアクセスできそうである
+* アクセスコントロールによっていくつかのその他のコンテンツは公開されているかもしれない。一方inboxの所有者でないユーザがまるでinboxにアクセスできるのであればその他のコンテンツに認証を要求してもよい(？)
+
+* サーバはinboxから返されたActivity達の重複を排除しなければならない
+* 複製はActorのフォロワーと受け取るactorをフォローする特定のActorの両方で起こすことができる
+* そのような重複排除にはactivityのidを比較しすでに見たactivityを抜かなければならない(？)
+
+* 連合サーバ上のActorのinbox達はHTTP POSTを受け入れる
+** 詳細は7章
+* 連合していないサーバはHTTPステータスコード405(Method Not Allowed)を返すべき(SHOULD)
+
 == 5.3 Followers Collection
 
 * Actorごとにfollowers collectionを持つべき(SHOULD)
@@ -33,5 +50,5 @@ NOTE: 要約中です
 
 * Actorごとにfollowing collectionを持つべき(SHOULD)
 * ActorがFollow activityを送信した全員のリスト
-* `following` collectionは `Orderedcollection` か `Collection` かのどちらかを選ばなければならない
-* following collectionは認められたユーザの特権で認められていないときは適切にフィルタにかけてもよい
+* `following` collectionは `Orderedcollection` か `Collection` かのどちらかを選ばなければならない(MUST)
+* following collectionは認められたユーザの特権で認められていないときは適切にフィルタにかけてもよい(MAY)
