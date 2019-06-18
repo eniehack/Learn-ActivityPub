@@ -19,6 +19,16 @@ NOTE: 要約中です
 * outboxはHTTPのPOSTリクエストを許可する
 ** 詳細は6章
 
+== 5.3 Followers Collection
+
+* Actorごとにfollowers collectionを持つべき(SHOULD)
+* ActorにFollow activityを送信した全員のリスト
+* そのActorをフォローしているActor全員のリストを見つける場所
+* `followers` collectionは `Orderedcollection` か `Collection` かのどちらかを選ばなければならない(MUST)
+* followers collectionは認められたユーザの特権で認められていないときは適切にフィルタにかけてもよい(MAY)
+* follow activityはActorが作ったobjectを見るためのリクエスト
+** followers collectionは通知の転送のための適切な標準的対象となる
+
 == 5.4 Following Collection
 
 * Actorごとにfollowing collectionを持つべき(SHOULD)
