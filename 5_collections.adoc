@@ -2,11 +2,10 @@
 
 * ActivityStreamsはCollectionという概念を定義する
 * ActivityPubは振舞いが特別ないくつかのCollectionを定義する
-* 
+* ActivityPubはActivityStreams pasingを大きなobjectを行き来するために用いる
 
-* これらcollectionの一部のNoteは指定された
-
-NOTE: 要約中です
+* これらcollectionの中には `OrderedCollection` と指定されているものもあれば `Collection` とのいずれかとなっているものもある
+* `OrderedCollection` は逆の時系列に整列されている必要がある
 
 == 5.1 Outbox
 
