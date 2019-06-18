@@ -18,3 +18,10 @@ NOTE: 要約中です
 * 利用可能なアイテムの数デプロイされたサーバや実装の裁量に任されているが、公開された関連のあるobject達である可能性がある
 * outboxはHTTPのPOSTリクエストを許可する
 ** 詳細は6章
+
+== 5.4 Following Collection
+
+* Actorごとにfollowing collectionを持つべき(SHOULD)
+* ActorがFollow activityを送信した全員のリスト
+* `following` collectionは `Orderedcollection` か `Collection` かのどちらかを選ばなければならない
+* following collectionは認められたユーザの特権で認められていないときは適切にフィルタにかけてもよい
