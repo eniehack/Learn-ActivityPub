@@ -1,0 +1,20 @@
+= 5. Collections
+
+* ActivityStreamsはCollectionという概念を定義する
+* ActivityPubは振舞いが特別ないくつかのCollectionを定義する
+* 
+
+* これらcollectionの一部のNoteは指定された
+
+NOTE: 要約中です
+
+== 5.1 Outbox
+
+* OutBoxはActorのプロフィールのoutboxプロパティから発見される
+* outboxはOrderedCollectionでなければならない(MUST)
+* ユーザが発信したactivity達を含むoutboxの流れはリクエストをした者の能力に応じてActivityを検索する
+** outboxのコンテンツは読み出そうとしている人の権限によってフィルターがかかる
+* ユーザが認可なしにリクエストを送信した場合サーバはPublicな投稿のすべてをレスポンスすべき
+* 利用可能なアイテムの数デプロイされたサーバや実装の裁量に任されているが、公開された関連のあるobject達である可能性がある
+* outboxはHTTPのPOSTリクエストを許可する
+** 詳細は6章
