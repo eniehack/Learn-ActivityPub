@@ -51,3 +51,11 @@
 * ActorがFollow activityを送信した全員のリスト
 * `following` collectionは `Orderedcollection` か `Collection` かのどちらかを選ばなければならない(MUST)
 * following collectionは認められたユーザの特権で認められていないときは適切にフィルタにかけてもよい(MAY)
+
+== 5.5 Liked Collection
+
+* Actorは `liked collection` を持ってもよい(MAY)
+* Actorが持つすべての `Like` Activityのリスト
+* liked collectionはOrderedCollectionかCollectionでなければならない(MUST)
+* 認証されていないユーザを適切に選別してもよい(MAY)
+
