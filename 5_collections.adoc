@@ -59,3 +59,10 @@
 * liked collectionはOrderedCollectionかCollectionでなければならない(MUST)
 * 認証されていないユーザを適切に選別してもよい(MAY)
 
+== 5.6 Public Addressing
+
+* Activityは識別子 `https://www.w3.org/ns/activitystreams#public` と共に特別な"public" collectionに宛ててよい
+* URI `https://www.w3.org/ns/activitystreams#public` はすべてのユーザに認証なしでもアクセス可能になるでしょう
+* ActivityPub実装は受け取れない実際のActivityをこのURIに転送してはならない
+* Actorはpublicなポストの転送が効率的にできるとき `sharedInbox` エンドポイントを持ってよい
+** フォロワー向けにポストと同様
