@@ -1,0 +1,38 @@
+:toc:
+= 6. Client to Server Interactions
+
+* activitystreamsで定義されているActivityはFF間でのコンテンツの作成、修正、共有で中心的な仕組み
+
+* client Server間の相互関係はClientがoutboxにActivityを投稿することで行われる
+* clientはユーザーのoutboxからプロフィールを発見し、outboxのURLに `Content-Type: application/ld+json; profile="https://www.w3.org/ns/activitystreams"` をヘッダーを添えてPOST requestを送らなければならない(MUST)
+* serverはc2s通信において `Content-Type` か `Accept` の `application/activity+json` を `application/ld+json; profile="https://www.w3.org/ns/activitystreams"` と等価であると解釈してよい
+* このRequestはoutboxを持つ本人であると証明できるユーザーでなければ行えない
+* POST requestの中身には1つのActivityかActivityでない1つのobjectを含まなければならない
+** 複数の埋め込まれたActivityも含んでよい
+* idプロパティを含むActivityを提出されたならばserverはそのidを削除して新規に生成しなければならない(MUST)
+* serverは一時的なactivityでないとき、 `201 Created` を 新しいid、 `Location` headerと共に返さなければならない(MUST)
+
+* 転送される以前のActivityStreamのobjectが存在するならばserverは `bto`,`bcc` プロパティ削除しなければならない(MUST)？
+* 受取人を確定するため、もともと `bto`/`bcc` に格納された宛て先を利用しなければならない(MUST)
+
+* serverは新しいActivityをoutboxに追加しなければならない(MUST)
+* Activityに応じてその後副作用を作動させる必要がある
+** outboxに現れるか保証がない
+** Activityは遅延の後現れるかもしれないが、一定期間後に消えることもありうる
+
+* c2s通信を実装していないserverにobjectをserverに提出しようとするclientがいた場合serverは `405 Method not allowed` 返すべき(SHOULD)
+
+* HTTPキャッシュ[RFC7234]は適切なときClientがサーバからclientにresponseを返すときだけでなく、サーバからresponceを受け取るときの双方で尊重されるべき(SHOULD)
+
+== 6.1 Clients Addressing
+
+* Clientは新しいActivityを適切に宛てる責任がある
+* ある程度特定のclientの実装に依存する
+* clientはserverが `to`,`bto`,`cc`,`bcc`,`audience` 各フィールドの受信者にのみ新しいActivityを送信することに注意する
+
+* Followers Collection や Public Collection は新しいActivityのデフォルトの宛先としていい選択
+
+* clientは `object`,`target`,`inReplyTo`,`tag` フィールドを経由して新しいActivityに付いているどんなobjectも見るべき(SHOULD)
+* それらの `actor` か `attributedTo` プロパティを検索する
+
+== 6.2
